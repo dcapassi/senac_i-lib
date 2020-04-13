@@ -11,6 +11,7 @@ import EmprestimosSalasController from "./src/app/controller/EmprestimosSalasCon
 import ReservaLivrosController from "./src/app/controller/ReservaLivrosController";
 import ReservaSalasController from "./src/app/controller/ReservaSalasController";
 import SuspensoesController from "./src/app/controller/SuspensoesController";
+import GerarQRCode from "./src/app/controller/GerarQRCode";
 
 //Importação do Middleware para validação de Autenticação JWT
 import authMiddlware from "./src/app/middlewares/auth";
@@ -45,40 +46,94 @@ routes.put("/livros/:id", authMiddlware, LivrosController.update);
 routes.delete("/livros/:id", authMiddlware, LivrosController.delete);
 
 //Rotas para o Controlador EmprestimosLivrosController
-routes.get("/emprestimos/livros", authMiddlware, EmprestimosLivrosController.index);
-routes.get("/emprestimos/livros/:id", authMiddlware, EmprestimosLivrosController.show);
-routes.post("/emprestimos/livros", authMiddlware, EmprestimosLivrosController.store);
-routes.put("/emprestimos/livros/:id",authMiddlware,EmprestimosLivrosController.update);
-routes.delete("/emprestimos/livros/:id",authMiddlware,EmprestimosLivrosController.delete);
+routes.get(
+  "/emprestimos/livros",
+  authMiddlware,
+  EmprestimosLivrosController.index
+);
+routes.get(
+  "/emprestimos/livros/:id",
+  authMiddlware,
+  EmprestimosLivrosController.show
+);
+routes.post(
+  "/emprestimos/livros",
+  authMiddlware,
+  EmprestimosLivrosController.store
+);
+routes.put(
+  "/emprestimos/livros/:id",
+  authMiddlware,
+  EmprestimosLivrosController.update
+);
+routes.delete(
+  "/emprestimos/livros/:id",
+  authMiddlware,
+  EmprestimosLivrosController.delete
+);
 
 //Rotas para o Controlador EmprestimosSalasController
-routes.get("/emprestimos/salas/", authMiddlware, EmprestimosSalasController.index);
-routes.get("/emprestimos/salas/:id", authMiddlware, EmprestimosSalasController.show);
-routes.post("/emprestimos/salas/", authMiddlware, EmprestimosSalasController.store);
-routes.put("/emprestimos/salas/:id",authMiddlware,EmprestimosSalasController.update);
-routes.delete("/emprestimos/salas/:id",authMiddlware,EmprestimosSalasController.delete);
+routes.get(
+  "/emprestimos/salas/",
+  authMiddlware,
+  EmprestimosSalasController.index
+);
+routes.get(
+  "/emprestimos/salas/:id",
+  authMiddlware,
+  EmprestimosSalasController.show
+);
+routes.post(
+  "/emprestimos/salas/",
+  authMiddlware,
+  EmprestimosSalasController.store
+);
+routes.put(
+  "/emprestimos/salas/:id",
+  authMiddlware,
+  EmprestimosSalasController.update
+);
+routes.delete(
+  "/emprestimos/salas/:id",
+  authMiddlware,
+  EmprestimosSalasController.delete
+);
 
 //Rotas para o Controlador EmprestimosLivrosController
 routes.get("/reservas/livros", authMiddlware, ReservaLivrosController.index);
 routes.get("/reservas/livros/:id", authMiddlware, ReservaLivrosController.show);
 routes.post("/reservas/livros", authMiddlware, ReservaLivrosController.store);
-routes.put("/reservas/livros/:id",authMiddlware,ReservaLivrosController.update);
-routes.delete("/reservas/livros/:id",authMiddlware,ReservaLivrosController.delete)
+routes.put(
+  "/reservas/livros/:id",
+  authMiddlware,
+  ReservaLivrosController.update
+);
+routes.delete(
+  "/reservas/livros/:id",
+  authMiddlware,
+  ReservaLivrosController.delete
+);
 
 //Rotas para o Controlador ReservaSalasController
 routes.get("/reservas/salas/", authMiddlware, ReservaSalasController.index);
 routes.get("/reservas/salas/:id", authMiddlware, ReservaSalasController.show);
 routes.post("/reservas/salas/", authMiddlware, ReservaSalasController.store);
-routes.put("/reservas/salas/:id",authMiddlware,ReservaSalasController.update);
-routes.delete("/reservas/salas/:id",authMiddlware,ReservaSalasController.delete);
+routes.put("/reservas/salas/:id", authMiddlware, ReservaSalasController.update);
+routes.delete(
+  "/reservas/salas/:id",
+  authMiddlware,
+  ReservaSalasController.delete
+);
 
 //Rotas para o Controlador SuspensoesController
 routes.get("/suspensoes/", authMiddlware, SuspensoesController.index);
 routes.get("/suspensoes/:id", authMiddlware, SuspensoesController.show);
 routes.post("/suspensoes/", authMiddlware, SuspensoesController.store);
-routes.put("/suspensoes/:id",authMiddlware,SuspensoesController.update);
-routes.delete("/suspensoes/:id",authMiddlware,SuspensoesController.delete);
+routes.put("/suspensoes/:id", authMiddlware, SuspensoesController.update);
+routes.delete("/suspensoes/:id", authMiddlware, SuspensoesController.delete);
 
+//Rotas para GerarQRCode
+routes.post("/qr/", GerarQRCode.show);
 
 //Rotas para o Controlador Sessão
 routes.post("/sessao", SessionController.show);

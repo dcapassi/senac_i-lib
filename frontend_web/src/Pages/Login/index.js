@@ -2,30 +2,35 @@ import React, { Component } from "react";
 import "./styles.css";
 import logo from "../../../src/static/logoILib.png";
 import api from "../../../src/services/api";
+import history from "../../services/history";
+
+var usuarioLogado = false;
 
 export default class Login extends Component {
-  enviarCredenciais = async e => {
+  enviarCredenciais = async (e) => {
     e.preventDefault();
 
-    var usuario = document.getElementById("loginUsuario").value;
-    var senha = document.getElementById("loginSenha").value;
+    const usuario = document.getElementById("loginUsuario").value;
+    const senha = document.getElementById("loginSenha").value;
 
-    const response = await api
+    const data = await api
       .post("/sessao", {
         email: usuario,
-        senha: senha
+        senha: senha,
       })
-      .then(function(response) {
+      .then(function (response) {
         console.log(response);
+        usuarioLogado = true;
+        history.push("/MenuPrincipal");
       })
-      .catch(function(response) {
+      .catch(function (response) {
         console.log(response);
         document.getElementById("mensagemFalhaAutenticacao").innerText =
           "Usuário ou senha incorretos";
       });
   };
 
-  handleChange = async e => {
+  handleChange = async (e) => {
     document.getElementById("mensagemFalhaAutenticacao").innerText = "";
   };
 
@@ -68,3 +73,4 @@ export default class Login extends Component {
     );
   }
 }
+export var usuarioLogado;
