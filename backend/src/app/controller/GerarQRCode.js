@@ -27,7 +27,7 @@ class GerarQRCode {
         console.log("Data: " + base64);
         return res.json({ base64 });
       });
-    }, 100);
+    }, 500);
   }
 }
 
