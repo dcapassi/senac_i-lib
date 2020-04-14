@@ -3,7 +3,6 @@ import logo from "../../../src/static/logoILib.png";
 import api from "../../../src/services/api";
 import history from "../../services/history";
 import { LoginComponent } from "../Login/styles";
-
 var usuarioLogado = false;
 
 export default class Login extends Component {

@@ -1,27 +1,26 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Header, Container, Option } from "./styles";
+import { Container, Option } from "./styles";
 import logo from "../../../src/static/logoILib.png";
 import avatar from "../../static/dcapassi.jpg";
 import { FiUser } from "react-icons/fi";
 import { FaBook } from "react-icons/fa";
 import { GiDoorHandle } from "react-icons/gi";
 import { GoSearch } from "react-icons/go";
+import Header from "../../Components/Header";
 
 export default class MenuPrincipal extends Component {
+  abrirMenu = (e) => {
+    document.getElementById("menuUsuario").style.display = "block";
+  };
+  fecharMenu = (e) => {
+    document.getElementById("menuUsuario").style.display = "none";
+  };
+
   render() {
     return (
       <>
-        <Header>
-          <img src={logo} alt="logo" />
-          <div>
-            <div>
-              <strong>Diego Capassi Moreira</strong>
-              <p>diego.capassi@senac.com.br</p>
-            </div>
-            <img id="avatar" src={avatar} alt="avatar" />
-          </div>
-        </Header>
+        <Header />
         <Container>
           <h1>Menu Principal</h1>
           <Option>
@@ -29,23 +28,22 @@ export default class MenuPrincipal extends Component {
               <FiUser size={100} color="#044C8C" />
               <div>
                 <strong>Usuários</strong>
-                <Link>Criar Usuários</Link>
+                <Link to="/CadastrarUsuario">Criar Usuários</Link>
               </div>
             </div>
             <div>
               <FaBook size={100} color="#044C8C" />
               <div>
                 <strong>Livros</strong>
-                <Link>Cadastrar ISBN</Link>
-                <Link>Cadastrar Livro</Link>
+                <Link to="/CadastrarISBN">Cadastrar ISBN</Link>
+                <Link to="/CadastrarLivro">Cadastrar Livro</Link>
               </div>
             </div>
             <div>
               <GiDoorHandle size={100} color="#044C8C" />
               <div>
                 <strong>Salas</strong>
-                <Link>Cadastrar Sala</Link>
-                <Link>Listar Sala</Link>
+                <Link to="/CadastrarSala">Cadastrar Sala</Link>
               </div>
             </div>
             <div>
