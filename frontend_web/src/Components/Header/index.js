@@ -8,7 +8,7 @@ import api from "../../services/api";
 
 class Header extends Component {
   state = {
-    avatar: "",
+    avatar: "admin.png",
   };
 
   abrirMenu = (e) => {
@@ -20,14 +20,17 @@ class Header extends Component {
 
   async componentDidMount() {
     const { user } = this.props;
-
-    const response = await api.get(`avatar/${user.id}`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
-
-    this.setState({ avatar: response.data.arquivo });
+    let loadedAvatar = this.state.avatar;
+    const response = await api
+      .get(`avatar/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then(function (response) {
+        loadedAvatar = response.data.arquivo;
+      });
+    this.setState({ avatar: loadedAvatar });
   }
 
   render() {

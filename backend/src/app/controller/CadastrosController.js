@@ -10,7 +10,7 @@ nome:
 cpf:
 email:
 senha:
-tipo: (1 | 2 | 3) onde 1 = aluno, 2 = funcionário e 3 = administrador
+tipo: (1 | 2 | 3 | 4) onde 1 = aluno, 2 = funcionário e 3 = administrador 4 = professor
 
 *****************************************/
 //index
@@ -25,8 +25,8 @@ class CadastrosController {
      * Mostrar todos os usuarios
      * *******************************/
     const resultado = await User.findAll({
-      attributes: ["id", "nome", "cpf", "email"]
-    }).catch(err => {
+      attributes: ["id", "nome", "cpf", "email"],
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json(resultado);
@@ -37,7 +37,7 @@ class CadastrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.number().required()
+      id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -48,7 +48,7 @@ class CadastrosController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let validacao = await User.findByPk(id).catch(err => {
+    let validacao = await User.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -71,7 +71,7 @@ class CadastrosController {
       cpf: Yup.string().required(),
       email: Yup.string().required(),
       senha: Yup.string().required(),
-      tipo: Yup.number().required()
+      tipo: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -84,9 +84,9 @@ class CadastrosController {
 
     let validacao = await User.findAll({
       where: {
-        [Op.or]: [{ email: req.body.email }, { cpf: req.body.cpf }]
-      }
-    }).catch(err => {
+        [Op.or]: [{ email: req.body.email }, { cpf: req.body.cpf }],
+      },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     if (!(validacao == false)) {
@@ -97,9 +97,11 @@ class CadastrosController {
      * Gravar dados no Banco
      * *******************************/
 
-    const { id, nome, cpf, email } = await User.create(req.body).catch(err => {
-      return res.status(400).json({ erro: err.name });
-    });
+    const { id, nome, cpf, email } = await User.create(req.body).catch(
+      (err) => {
+        return res.status(400).json({ erro: err.name });
+      }
+    );
     return res.json({ id, nome, cpf, email });
   } // fim do método store
 
@@ -113,7 +115,7 @@ class CadastrosController {
       cpf: Yup.string().min(6),
       senha: Yup.string().when("senhaAntiga", (senhaAntiga, field) =>
         senhaAntiga ? field.required() : field
-      )
+      ),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -124,7 +126,7 @@ class CadastrosController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let userExistente = await User.findByPk(id).catch(err => {
+    let userExistente = await User.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -138,9 +140,9 @@ class CadastrosController {
 
     let validacao = await User.findAll({
       where: {
-        [Op.or]: [{ email: req.body.email }, { cpf: req.body.cpf }]
-      }
-    }).catch(err => {
+        [Op.or]: [{ email: req.body.email }, { cpf: req.body.cpf }],
+      },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     if (!(validacao == false)) {
@@ -158,7 +160,7 @@ class CadastrosController {
      * *******************************/
 
     const { nome, cpf, email } = req.body;
-    await userExistente.update(req.body).catch(err => {
+    await userExistente.update(req.body).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ nome, cpf, email });
@@ -169,7 +171,7 @@ class CadastrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.number().required()
+      id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -179,7 +181,7 @@ class CadastrosController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let userExistente = await User.findByPk(id).catch(err => {
+    let userExistente = await User.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -190,7 +192,7 @@ class CadastrosController {
     /**********************************
      * Remove o usuário
      * *******************************/
-    const respostaRemoção = await userExistente.destroy().catch(err => {
+    const respostaRemoção = await userExistente.destroy().catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ "usuário removido": id });

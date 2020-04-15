@@ -7,42 +7,42 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
       },
       id_sala: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         references: { model: "salas", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
-        allowNull: true
+        allowNull: true,
       },
       id_usuario: {
         type: Sequelize.INTEGER,
         references: { model: "usuarios", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "SET NULL",
-        allowNull: true
+        allowNull: true,
       },
       estado: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       vencimento: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       updated_at: {
         type: Sequelize.DATE,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     });
   },
 
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.dropTable("reservaSalas");
-  }
+  },
 };

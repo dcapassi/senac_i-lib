@@ -6,41 +6,41 @@ module.exports = {
       "salas",
       [
         {
-          id: 1001,
+          id: "SALA_001",
           numero: 20,
           localizacao: "Segundo Andar",
           descricao: "Sala de estudos em grupo",
           estado: 1,
           created_at: new Date(),
-          updated_at: new Date()
+          updated_at: new Date(),
         },
         {
-          id: 1002,
+          id: "SALA_002",
           numero: 21,
           localizacao: "Segundo Andar",
           descricao: "Sala de estudos em grupo",
           estado: 1,
           created_at: new Date(),
-          updated_at: new Date()
+          updated_at: new Date(),
         },
         {
-          id: 1003,
+          id: "SALA_003",
           numero: 23,
           localizacao: "Primeiro Andar",
           descricao: "Sala de estudos individual",
           estado: 1,
           created_at: new Date(),
-          updated_at: new Date()
+          updated_at: new Date(),
         },
         {
-          id: 1004,
+          id: "SALA_004",
           numero: 24,
           localizacao: "Primeiro Andar",
           descricao: "Sala de estudos individual",
           estado: 1,
           created_at: new Date(),
-          updated_at: new Date()
-        }
+          updated_at: new Date(),
+        },
       ],
       {}
     );
@@ -48,5 +48,5 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete("salas", null, {});
-  }
+  },
 };

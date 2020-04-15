@@ -62,3 +62,40 @@ export const FormUsuarios = styled.div`
     }
   }
 `;
+
+export const MessageBox = styled.div`
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  font-family: "Open Sans";
+  font-size: 10px;
+  margin: 0 auto;
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, 0);
+  justify-content: center;
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.25);
+  background-color: lightgray;
+  border-radius: 8px;
+  border: 1px solid lightsalmon;
+  height: 160px;
+  padding: 0 8px 20px 0;
+  width: 500px;
+  z-index: 1;
+  #tittle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #message div {
+    font-size: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+`;

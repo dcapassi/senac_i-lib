@@ -21,8 +21,8 @@ class SalasController {
      * Mostrar todos os livros cadastrados
      * *******************************/
     const resultado = await Salas.findAll({
-      attributes: ["id", "numero", "localizacao", "descricao", "estado"]
-    }).catch(err => {
+      attributes: ["id", "numero", "localizacao", "descricao", "estado"],
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -34,7 +34,7 @@ class SalasController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.string().required()
+      id: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -45,7 +45,7 @@ class SalasController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let validacao = await Salas.findOne({ where: { id } }).catch(err => {
+    let validacao = await Salas.findOne({ where: { id } }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -74,9 +74,9 @@ class SalasController {
      * *******************************/
 
     const schema = Yup.object().shape({
-      id: Yup.number().required(),
+      id: Yup.string().required(),
       numero: Yup.number().required(),
-      localizacao: Yup.string().required()
+      localizacao: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -87,9 +87,9 @@ class SalasController {
 
     let validacao = await Salas.findAll({
       where: {
-        id
-      }
-    }).catch(err => {
+        id,
+      },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -102,8 +102,8 @@ class SalasController {
       numero,
       localizacao,
       descricao,
-      estado: 0
-    }).catch(err => {
+      estado: 0,
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json(resposta);
@@ -118,8 +118,8 @@ class SalasController {
      * Verificar se o Código da Sala existe
      * *******************************/
     let salaExistente = await Salas.findOne({
-      where: { id: req.params.id }
-    }).catch(err => {
+      where: { id: req.params.id },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -133,8 +133,8 @@ class SalasController {
 
     if (req.body.id) {
       let validacao = await Salas.findOne({
-        where: { id: req.body.id }
-      }).catch(err => {
+        where: { id: req.body.id },
+      }).catch((err) => {
         return res.status(400).json({ erro: err.name });
       });
       if (!(validacao == null)) {
@@ -149,8 +149,8 @@ class SalasController {
     const { id, numero, localizacao, descricao, estado } = req.body;
     let response = await Salas.update(req.body, {
       returning: true,
-      where: { id: req.params.id }
-    }).catch(err => {
+      where: { id: req.params.id },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -166,7 +166,7 @@ class SalasController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.string().required()
+      id: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -176,7 +176,7 @@ class SalasController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let salaExistente = await Salas.findOne({ where: { id } }).catch(err => {
+    let salaExistente = await Salas.findOne({ where: { id } }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -187,7 +187,7 @@ class SalasController {
     /**********************************
      * Remove o usuário
      * *******************************/
-    const respostaRemoção = await salaExistente.destroy().catch(err => {
+    const respostaRemoção = await salaExistente.destroy().catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ "Sala removida": id });
