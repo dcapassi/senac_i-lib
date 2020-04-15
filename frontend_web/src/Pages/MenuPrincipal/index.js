@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Container, Option } from "./styles";
 import logo from "../../../src/static/logoILib.png";
-import avatar from "../../static/dcapassi.jpg";
 import { FiUser } from "react-icons/fi";
 import { FaBook } from "react-icons/fa";
 import { GiDoorHandle } from "react-icons/gi";

@@ -7,13 +7,10 @@ import { connect } from "react-redux";
 function RouteWrapper({ component: Component, isPrivate, user, ...resto }) {
   let usuarioLogado = false;
 
-  console.log(user.nome);
-
   if (user.nome != undefined) {
     usuarioLogado = true;
   }
 
-  console.log(`Logado: ${usuarioLogado}`);
   const logado = usuarioLogado;
 
   if (!logado && isPrivate) {

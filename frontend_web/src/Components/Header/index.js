@@ -2,10 +2,15 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Head, SideNav } from "./styles";
 import logo from "../../../src/static/logoILib.png";
-import avatar from "../../static/dcapassi.jpg";
+//import avatar from "../../static/dcapassi.jpg";
 import { connect } from "react-redux";
+import api from "../../services/api";
 
 class Header extends Component {
+  state = {
+    avatar: "",
+  };
+
   abrirMenu = (e) => {
     document.getElementById("menuUsuario").style.display = "block";
   };
@@ -13,8 +18,21 @@ class Header extends Component {
     document.getElementById("menuUsuario").style.display = "none";
   };
 
+  async componentDidMount() {
+    const { user } = this.props;
+
+    const response = await api.get(`avatar/${user.id}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    this.setState({ avatar: response.data.arquivo });
+  }
+
   render() {
     const { user } = this.props;
+    const { avatar } = this.state;
 
     return (
       <>
@@ -27,7 +45,7 @@ class Header extends Component {
             </div>
             <img
               id="avatar"
-              src={avatar}
+              src={`http://localhost:3399/files/${avatar}`}
               alt="avatar"
               onClick={this.abrirMenu}
             />

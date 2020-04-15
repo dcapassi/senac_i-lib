@@ -146,12 +146,18 @@ routes.post("/qr/", GerarQRCode.show);
 //Rotas para o Controlador Sessão
 routes.post("/sessao", SessionController.show);
 
-//Adicionar Avatar
+//Rotas para o Controlador Avatar
 routes.post(
   "/avatar",
   upload.single("file"),
   authMiddlware,
   AvatarController.store
 );
+
+routes.get(
+    "/avatar/:id",
+    authMiddlware,
+    AvatarController.show
+  );
 
 export default routes;
