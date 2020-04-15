@@ -3,14 +3,17 @@ import logo from "../../../src/static/logoILib.png";
 import api from "../../../src/services/api";
 import history from "../../services/history";
 import { LoginComponent } from "../Login/styles";
+import { connect } from "react-redux";
+
 var usuarioLogado = false;
 
-export default class Login extends Component {
+class Login extends Component {
   enviarCredenciais = async (e) => {
     e.preventDefault();
 
     const usuario = document.getElementById("loginUsuario").value;
     const senha = document.getElementById("loginSenha").value;
+    const { dispatch } = this.props;
 
     const data = await api
       .post("/sessao", {
@@ -20,6 +23,11 @@ export default class Login extends Component {
       .then(function (response) {
         console.log(response);
         usuarioLogado = true;
+        dispatch({
+          type: "@user/LOGGED",
+          response,
+        });
+
         history.push("/MenuPrincipal");
       })
       .catch(function (response) {
@@ -74,4 +82,5 @@ export default class Login extends Component {
     );
   }
 }
-export var usuarioLogado;
+
+export default connect()(Login);

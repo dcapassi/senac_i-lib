@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { Head, SideNav } from "./styles";
 import logo from "../../../src/static/logoILib.png";
 import avatar from "../../static/dcapassi.jpg";
+import { connect } from "react-redux";
 
-export default class Header extends Component {
+class Header extends Component {
   abrirMenu = (e) => {
     document.getElementById("menuUsuario").style.display = "block";
   };
@@ -13,14 +14,16 @@ export default class Header extends Component {
   };
 
   render() {
+    const { user } = this.props;
+
     return (
       <>
         <Head>
           <img src={logo} alt="logo" />
           <div>
             <div>
-              <strong>Diego Capassi Moreira</strong>
-              <p>diego.capassi@senac.com.br</p>
+              <strong>{user.nome}</strong>
+              <p>{user.email}</p>
             </div>
             <img
               id="avatar"
@@ -43,3 +46,8 @@ export default class Header extends Component {
     );
   }
 }
+
+const mapState = (state) => ({
+  user: state.user,
+});
+export default connect(mapState)(Header);

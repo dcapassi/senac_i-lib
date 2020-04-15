@@ -40,7 +40,7 @@ export default class CadastrarUsuario extends Component {
                   <option value="1">Administrador</option>
                 </select>
               </label>
-              <button type="buton">Cadastrar</button>
+              <button type="submit">Cadastrar</button>
             </form>
           </div>
         </FormUsuarios>

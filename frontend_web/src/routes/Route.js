@@ -1,13 +1,18 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import { usuarioLogado } from "../Pages/Login";
+//import { usuarioLogado } from "../Pages/Login";
+import { connect } from "react-redux";
 
-export default function RouteWrapper({
-  component: Component,
-  isPrivate,
-  ...resto
-}) {
+function RouteWrapper({ component: Component, isPrivate, user, ...resto }) {
+  let usuarioLogado = false;
+
+  console.log(user.nome);
+
+  if (user.nome != undefined) {
+    usuarioLogado = true;
+  }
+
   console.log(`Logado: ${usuarioLogado}`);
   const logado = usuarioLogado;
 
@@ -30,3 +35,7 @@ RouteWrapper.propTypes = {
 RouteWrapper.defaultProps = {
   isPrivate: false,
 };
+const mapState = (state) => ({
+  user: state.user,
+});
+export default connect(mapState)(RouteWrapper);

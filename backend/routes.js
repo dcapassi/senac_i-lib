@@ -12,10 +12,18 @@ import ReservaLivrosController from "./src/app/controller/ReservaLivrosControlle
 import ReservaSalasController from "./src/app/controller/ReservaSalasController";
 import SuspensoesController from "./src/app/controller/SuspensoesController";
 import GerarQRCode from "./src/app/controller/GerarQRCode";
+import AvatarController from "./src/app/controller/AvatarController";
+
+//Multer
+import multer from "multer";
+import multerConfig from "../backend/src/configs/multer";
 
 //Importação do Middleware para validação de Autenticação JWT
 import authMiddlware from "./src/app/middlewares/auth";
+import AvatarController from "./src/app/controller/AvatarController";
+
 const routes = new Router();
+const upload = multer(multerConfig);
 
 //Rotas para o Controlador CadastrosController
 routes.get("/cadastros", CadastrosController.index);
@@ -137,5 +145,13 @@ routes.post("/qr/", GerarQRCode.show);
 
 //Rotas para o Controlador Sessão
 routes.post("/sessao", SessionController.show);
+
+//Adicionar Avatar
+routes.post(
+  "/avatar",
+  upload.single("file"),
+  authMiddlware,
+  AvatarController.store
+);
 
 export default routes;

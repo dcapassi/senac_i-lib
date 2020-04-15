@@ -8,6 +8,7 @@ import EmprestimosSalas from "../app/models/EmprestimosSalas";
 import ReservaLivros from "../app/models/ReservaLivros";
 import ReservaSalas from "../app/models/ReservaSalas";
 import Suspensoes from "../app/models/Suspensoes";
+import Avatar from "../app/models/Avatar";
 
 import databaseConfig from "../configs/databaseConfig";
 
@@ -20,7 +21,8 @@ const models = [
   EmprestimosSalas,
   ReservaLivros,
   ReservaSalas,
-  Suspensoes
+  Suspensoes,
+  Avatar,
 ];
 
 class Database {
@@ -30,8 +32,10 @@ class Database {
   init() {
     this.connection = new Sequelize(databaseConfig);
     models
-      .map(model => model.init(this.connection))
-      .map(model => model.associate && model.associate(this.connection.models));
+      .map((model) => model.init(this.connection))
+      .map(
+        (model) => model.associate && model.associate(this.connection.models)
+      );
   }
 }
 
