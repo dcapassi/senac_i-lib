@@ -54,12 +54,14 @@ class Login extends Component {
             </p>
             <form>
               <input
+                autocomplete="off"
                 type="text"
                 placeholder="Usuário"
                 id="loginUsuario"
                 onChange={this.handleChange}
               ></input>
               <input
+                autocomplete="off"
                 type="password"
                 placeholder="Senha"
                 id="loginSenha"

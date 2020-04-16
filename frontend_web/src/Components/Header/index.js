@@ -11,6 +11,13 @@ class Header extends Component {
     avatar: "admin.png",
   };
 
+  deslogar = (e) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: "@user/SIGN_OUT",
+    });
+  };
+
   abrirMenu = (e) => {
     document.getElementById("menuUsuario").style.display = "block";
   };
@@ -60,7 +67,9 @@ class Header extends Component {
               &times;
             </a>
             <a href="#">Minha Conta</a>
-            <a href="#">Deslogar</a>
+            <a href="#" onClick={this.deslogar}>
+              Deslogar
+            </a>
           </div>
         </SideNav>
       </>

@@ -99,19 +99,19 @@ class CadastrarSala extends Component {
             <form>
               <label>
                 Código da Sala:
-                <input type="string" id="inputId" />
+                <input autocomplete="off" type="string" id="inputId" />
               </label>
               <label>
                 Número:
-                <input type="number" id="inputNumero" />
+                <input autocomplete="off"type="number" id="inputNumero" />
               </label>
               <label>
                 Localização:
-                <input type="text" id="inputLocalizacao" />
+                <input autocomplete="off" type="text" id="inputLocalizacao" />
               </label>
               <label>
                 Descrição:
-                <input type="text" id="inputDescricao" />
+                <input autocomplete="off" type="text" id="inputDescricao" />
               </label>
 
               <button type="buton" onClick={this.handleSubmit}>
