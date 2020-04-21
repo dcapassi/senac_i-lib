@@ -7,10 +7,8 @@ class SessionController {
   async show(req, res) {
     //Input Validation
     const schema = Yup.object().shape({
-      email: Yup.string()
-        .email()
-        .required(),
-      senha: Yup.string().required()
+      email: Yup.string().email().required(),
+      senha: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -19,7 +17,7 @@ class SessionController {
 
     const { email, senha } = req.body;
 
-    const user = await User.findOne({ where: { email } }).catch(err => {
+    const user = await User.findOne({ where: { email } }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -36,8 +34,8 @@ class SessionController {
     return res.json({
       usuario: { tipo, id, nome, email },
       token: jwt.sign({ id, tipo, nome, email }, authConfig.secret, {
-        expiresIn: authConfig.expiresIn
-      })
+        expiresIn: authConfig.expiresIn,
+      }),
     });
   }
 }
