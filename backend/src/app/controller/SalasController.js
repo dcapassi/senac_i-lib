@@ -102,7 +102,7 @@ class SalasController {
       numero,
       localizacao,
       descricao,
-      estado: 0,
+      estado: 1,
     }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });

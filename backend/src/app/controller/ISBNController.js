@@ -16,7 +16,6 @@ idioma:
 *****************************************/
 class ISBNController {
   async index(req, res) {
-    let arrayISBN = [{ a: 1 }];
     // Retirar o atributo "id" dos inserts e queries
     Isbn.removeAttribute("id");
 
@@ -39,7 +38,7 @@ class ISBNController {
         return res.status(400).json({ erro: err.name });
       });
       return {
-        livro: entry.nome_livro,
+        nome_livro: entry.nome_livro,
         isbn: entry.isbn,
         quantidade: quantidadeLivros,
         editora: entry.editora,

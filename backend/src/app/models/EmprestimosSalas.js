@@ -5,11 +5,11 @@ class emprestimosSalas extends Model {
     super.init(
       {
         estado: Sequelize.STRING,
-        vencimento: Sequelize.DATE
+        vencimento: Sequelize.DATE,
       },
       {
         freezeTableName: true,
-        sequelize
+        sequelize,
       }
     );
 
@@ -19,7 +19,7 @@ class emprestimosSalas extends Model {
   static associate(models) {
     this.belongsTo(models.usuarios, {
       foreignKey: "id_usuario",
-      as: "usuario"
+      as: "usuario",
     });
     this.belongsTo(models.salas, { foreignKey: "id_sala", as: "salas" });
   }

@@ -1,5 +1,10 @@
+import { QueryTypes } from "sequelize";
+import database from "../../database/index";
+
 import * as Yup from "yup";
 import EmprestimosLivros from "../models/EmprestimosLivros";
+import Suspensoes from "../models/Suspensoes";
+
 import { startOfHour, parseISO, isBefore, format } from "date-fns";
 import pt from "date-fns/locale/pt";
 import regras from "../../app/regrasNegocio/regrasNegocios";
@@ -13,7 +18,7 @@ Campos obrigatórios:
 id_usuario:
 id_livro:
 vencimento:
-tipo: (1 | 2) onde 1 = ativo, 2 = finalizado
+tipo: (0 | 1| 2) onde 0 = Aguardando aprovação, 1 = emprestado, 2 = finalizado
 
 *****************************************/
 //index
@@ -24,14 +29,18 @@ tipo: (1 | 2) onde 1 = ativo, 2 = finalizado
 
 class EmprestimosLivrosController {
   async index(req, res) {
-    /**********************************
-     * Mostrar todos os emprestimos
-     * *******************************/
-    const resultado = await EmprestimosLivros.findAll({
-      attributes: ["id", "id_usuario", "id_livro", "estado", "vencimento"]
-    }).catch(err => {
-      return res.status(400).json({ erro: err.name });
-    });
+    const { id } = req.params;
+    const resultado = await database.connection
+      .query(
+        `select "emprestimosLivros".estado, "emprestimosLivros".vencimento, isbn.isbn, isbn.nome_livro, isbn.autor, isbn.idioma, isbn.autor,isbn.editora from "emprestimosLivros"  inner join livros on "emprestimosLivros".id_livro = livros.id inner join isbn on livros.id_isbn=isbn.isbn
+        where "emprestimosLivros".id_usuario = '${res.id}'`,
+        {
+          type: QueryTypes.SELECT,
+        }
+      )
+      .catch((err) => {
+        return res.status(400).json({ erro: err });
+      });
 
     return res.json(resultado);
   } // fim do método index
@@ -41,7 +50,7 @@ class EmprestimosLivrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.number().required()
+      id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -52,7 +61,7 @@ class EmprestimosLivrosController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let validacao = await EmprestimosLivros.findByPk(id).catch(err => {
+    let validacao = await EmprestimosLivros.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -71,8 +80,7 @@ class EmprestimosLivrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id_usuario: Yup.number().required(),
-      id_livro: Yup.string().required()
+      id_livro: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -82,8 +90,30 @@ class EmprestimosLivrosController {
     /****************************************************************
      * Garantir que usuario possa pegar livros emprestados
      * *************************************************************/
+    const userId = res.id;
 
-    // Os métodos de verificação serão criados
+    let validacao = await Suspensoes.findOne({
+      where: { id_usuario: userId },
+    }).catch((err) => {
+      return res.status(400).json({ erro: err });
+    });
+    if (validacao != null) {
+      return res.status(400).json({ erro: "Usuários está suspenso!" });
+    }
+
+    //Verificar se livro já está em emprestimo com o usuário
+
+    let verificaEmprestimos = await EmprestimosLivros.findOne({
+      where: { [Op.and]: [{ id_livro: req.body.id_livro }, { estado: "0" }] },
+    }).catch((err) => {
+      return res.status(400).json({ erro: err });
+    });
+
+    if (verificaEmprestimos != null) {
+      return res
+        .status(400)
+        .json({ erro: "Livro já está em processo de Emprestimo!" });
+    }
 
     /**********************************
      * Gravar dados no Banco
@@ -93,21 +123,30 @@ class EmprestimosLivrosController {
     const dia = diaAgora.getDate();
     const mes = diaAgora.getMonth() + 1;
     const ano = diaAgora.getFullYear();
+    //const dataVencimento = `${mes}/${dia + regras.diasEmprestimo.alunos}/${ano}`;
+    const dataVencimento = new Date(ano, mes, dia);
+    dataVencimento.setDate(
+      dataVencimento.getDate() + regras.diasEmprestimo.alunos
+    );
     const {
       id_usuario,
       id_livro,
       estado,
-      vencimento
+      vencimento,
     } = await EmprestimosLivros.create({
-      id: req.body.id,
-      id_usuario: req.body.id_usuario,
+      id_usuario: userId,
       id_livro: req.body.id_livro,
-      estado: 1,
-      vencimento: `${mes}/${dia + regras.diasEmprestimo.alunos}/${ano}`
-    }).catch(err => {
-      return res.status(400).json({ erro: err.name });
+      estado: 0, //Cria emprestimos como Aguardando aprovação
+      vencimento: dataVencimento,
+    }).catch((err) => {
+      return res.status(400).json({ erro: err });
     });
-    return res.json({ id_usuario, id_livro, estado, vencimento });
+    return res.json({
+      id_usuario,
+      id_livro,
+      estado,
+      vencimento: dataVencimento,
+    });
   } // fim do método store
 
   async update(req, res) {
@@ -116,7 +155,7 @@ class EmprestimosLivrosController {
      * *******************************/
     const { id } = req.params;
     let emprestimoExistente = await EmprestimosLivros.findByPk(id).catch(
-      err => {
+      (err) => {
         return res.status(400).json({ erro: err.name });
       }
     );
@@ -131,8 +170,8 @@ class EmprestimosLivrosController {
     const { id_usuario, id_livro, estado, vencimento } = req.body;
     let response = await EmprestimosLivros.update(req.body, {
       returning: true,
-      where: { id }
-    }).catch(err => {
+      where: { id },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -144,7 +183,7 @@ class EmprestimosLivrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.number().required()
+      id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -155,7 +194,7 @@ class EmprestimosLivrosController {
      * *******************************/
     const { id } = req.params;
     let emprestimoExistente = await EmprestimosLivros.findByPk(id).catch(
-      err => {
+      (err) => {
         return res.status(400).json({ erro: err.name });
       }
     );
@@ -167,7 +206,7 @@ class EmprestimosLivrosController {
     /**********************************
      * Remove o emprestimo
      * *******************************/
-    const respostaRemoção = await emprestimoExistente.destroy().catch(err => {
+    const respostaRemoção = await emprestimoExistente.destroy().catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ "Emprestimo removido": id });

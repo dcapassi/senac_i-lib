@@ -1,6 +1,8 @@
+import database from "../../database/index";
 import * as Yup from "yup";
 import Books from "../models/Livros";
-
+import Isbn from "../models/Isbn";
+import { QueryTypes } from "sequelize";
 /****************************************
 Rota para cadastrar Livros:
 
@@ -19,8 +21,8 @@ class LivrosController {
      * Mostrar todos os livros cadastrados
      * *******************************/
     const resultado = await Books.findAll({
-      attributes: ["id", "id_isbn", "estado"]
-    }).catch(err => {
+      attributes: ["id", "id_isbn", "estado"],
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -32,7 +34,7 @@ class LivrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.string().required()
+      id: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -43,9 +45,16 @@ class LivrosController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let validacao = await Books.findOne({ where: { id } }).catch(err => {
-      return res.status(400).json({ erro: err.name });
-    });
+    let validacao = await database.connection
+      .query(
+        `SELECT livros.id, livros.estado, livros.id_isbn, isbn.nome_livro, isbn.autor, isbn.editora, isbn.idioma FROM isbn INNER JOIN livros ON isbn.isbn = livros.id_isbn where id='${id}'`,
+        {
+          type: QueryTypes.SELECT,
+        }
+      )
+      .catch((err) => {
+        return res.status(400).json({ erro: err });
+      });
 
     if (validacao == null) {
       return res.status(400).json({ error: "ID do Livro não existe" });
@@ -56,8 +65,8 @@ class LivrosController {
      * isbn,
      * estado,
      *********************************/
-    const { id_isbn, estado } = validacao;
-    return res.json({ id, id_isbn, estado });
+    //const { id_isbn, estado } = validacao;
+    return res.json(validacao);
   } //fim do método show
 
   async store(req, res) {
@@ -71,7 +80,7 @@ class LivrosController {
 
     const schema = Yup.object().shape({
       id: Yup.string().required(),
-      id_isbn: Yup.string().required()
+      id_isbn: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -82,9 +91,9 @@ class LivrosController {
 
     let validacao = await Books.findAll({
       where: {
-        id
-      }
-    }).catch(err => {
+        id,
+      },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -92,9 +101,11 @@ class LivrosController {
       return res.status(400).json({ error: "Livro já existente" });
     }
 
-    let resposta = await Books.create({ id, id_isbn, estado: 1 }).catch(err => {
-      return res.status(400).json({ erro: err.name });
-    });
+    let resposta = await Books.create({ id, id_isbn, estado: 1 }).catch(
+      (err) => {
+        return res.status(400).json({ erro: err.name });
+      }
+    );
     return res.json(resposta);
   } //fim do método store
 
@@ -107,8 +118,8 @@ class LivrosController {
      * Verificar se o Código do Livro existe
      * *******************************/
     let livroExistente = await Books.findOne({
-      where: { id: req.params.id }
-    }).catch(err => {
+      where: { id: req.params.id },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -122,8 +133,8 @@ class LivrosController {
 
     if (req.body.id) {
       let validacao = await Books.findOne({
-        where: { id: req.body.id }
-      }).catch(err => {
+        where: { id: req.body.id },
+      }).catch((err) => {
         return res.status(400).json({ erro: err.name });
       });
       if (!(validacao == null)) {
@@ -138,15 +149,15 @@ class LivrosController {
     const { id, estado, id_isbn } = req.body;
     let response = await Books.update(req.body, {
       returning: true,
-      where: { id: req.params.id }
-    }).catch(err => {
+      where: { id: req.params.id },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
     return res.json({
       id_isbn,
       id,
-      estado
+      estado,
     });
   } //fim do método update
 
@@ -159,7 +170,7 @@ class LivrosController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.string().required()
+      id: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -169,7 +180,7 @@ class LivrosController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let livroExistente = await Books.findOne({ where: { id } }).catch(err => {
+    let livroExistente = await Books.findOne({ where: { id } }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -180,7 +191,7 @@ class LivrosController {
     /**********************************
      * Remove o usuário
      * *******************************/
-    const respostaRemoção = await livroExistente.destroy().catch(err => {
+    const respostaRemoção = await livroExistente.destroy().catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ "Livro removido": id });

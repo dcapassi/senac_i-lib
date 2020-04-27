@@ -103,7 +103,7 @@ class CadastrarSala extends Component {
               </label>
               <label>
                 Número:
-                <input autocomplete="off"type="number" id="inputNumero" />
+                <input autocomplete="off" type="number" id="inputNumero" />
               </label>
               <label>
                 Localização:

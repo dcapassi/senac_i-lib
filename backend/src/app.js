@@ -1,8 +1,8 @@
 //const express = require("express");
 //const routes = require("../routes");
 import express from "express";
+import database from "./database/index";
 import routes from "../routes";
-import "./database/index";
 import cors from "cors";
 import path from "path";
 

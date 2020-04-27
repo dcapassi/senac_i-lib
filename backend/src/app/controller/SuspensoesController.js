@@ -27,8 +27,8 @@ class SuspensoesController {
      * Mostrar todos as suspensoes
      * *******************************/
     const resultado = await Suspensoes.findAll({
-      attributes: ["id", "id_usuario", "estado", "vencimento"]
-    }).catch(err => {
+      attributes: ["id", "id_usuario", "estado", "vencimento"],
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -40,7 +40,7 @@ class SuspensoesController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.number().required()
+      id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -51,7 +51,7 @@ class SuspensoesController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let validacao = await Suspensoes.findByPk(id).catch(err => {
+    let validacao = await Suspensoes.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -70,7 +70,7 @@ class SuspensoesController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id_usuario: Yup.number().required()
+      id_usuario: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -81,12 +81,16 @@ class SuspensoesController {
     const dia = diaAgora.getDate();
     const mes = diaAgora.getMonth() + 1;
     const ano = diaAgora.getFullYear();
+    const dataVencimento = new Date(ano, mes, dia);
+    dataVencimento.setDate(
+      dataVencimento.getDate() + regras.diasSuspensao.alunos
+    );
     const { id_usuario, estado, vencimento } = await Suspensoes.create({
       id: req.body.id,
       id_usuario: req.body.id_usuario,
       estado: 1,
-      vencimento: `${mes}/${dia + regras.diasSuspensao.alunos}/${ano}`
-    }).catch(err => {
+      vencimento: dataVencimento,
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ id_usuario, estado, vencimento });
@@ -97,7 +101,7 @@ class SuspensoesController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let suspensoesExistente = await Suspensoes.findByPk(id).catch(err => {
+    let suspensoesExistente = await Suspensoes.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -111,8 +115,8 @@ class SuspensoesController {
     const { id_usuario, estado, vencimento } = req.body;
     let response = await Suspensoes.update(req.body, {
       returning: true,
-      where: { id }
-    }).catch(err => {
+      where: { id },
+    }).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -124,7 +128,7 @@ class SuspensoesController {
      * Validação de entrada
      * *******************************/
     const schema = Yup.object().shape({
-      id: Yup.number().required()
+      id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.params))) {
@@ -134,7 +138,7 @@ class SuspensoesController {
      * Verificar se o Id existe
      * *******************************/
     const { id } = req.params;
-    let suspensoesExistente = await Suspensoes.findByPk(id).catch(err => {
+    let suspensoesExistente = await Suspensoes.findByPk(id).catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
 
@@ -145,7 +149,7 @@ class SuspensoesController {
     /**********************************
      * Remove a suspensoes
      * *******************************/
-    const respostaRemoção = await suspensoesExistente.destroy().catch(err => {
+    const respostaRemoção = await suspensoesExistente.destroy().catch((err) => {
       return res.status(400).json({ erro: err.name });
     });
     return res.json({ "Suspensão removida": id });
