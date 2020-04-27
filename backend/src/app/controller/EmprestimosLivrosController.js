@@ -120,14 +120,12 @@ class EmprestimosLivrosController {
      * *******************************/
 
     const diaAgora = new Date();
-    const dia = diaAgora.getDate();
-    const mes = diaAgora.getMonth() + 1;
-    const ano = diaAgora.getFullYear();
+
     //const dataVencimento = `${mes}/${dia + regras.diasEmprestimo.alunos}/${ano}`;
-    const dataVencimento = new Date(ano, mes, dia);
-    dataVencimento.setDate(
-      dataVencimento.getDate() + regras.diasEmprestimo.alunos
+    let dataVencimento = diaAgora.setDate(
+      diaAgora.getDate() + regras.diasEmprestimo.alunos
     );
+    dataVencimento = new Date(dataVencimento);
     const {
       id_usuario,
       id_livro,
